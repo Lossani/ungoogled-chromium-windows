@@ -25,13 +25,10 @@ async function run() {
     const assets = JSON.parse(core.getInput('assets', {
         required: true,
     }));
-    let x86Url, x64Url;
+    let x64Url;
     for (const data of assets) {
         if (data.browser_download_url.endsWith('.exe')) {
-            if (data.browser_download_url.includes('x86'))
-                x86Url = data.browser_download_url;
-            else
-                x64Url = data.browser_download_url;
+            x64Url = data.browser_download_url;
         }
     }
 
@@ -49,7 +46,7 @@ async function run() {
     } catch (e) {
     }
 
-    await updateInstaller(latestVersionPath, newVersionPath, latestVersion, newVersion, x86Url, x64Url);
+    await updateInstaller(latestVersionPath, newVersionPath, latestVersion, newVersion, x64Url);
     await replaceContent(latestVersionPath, newVersionPath, latestVersion, newVersion, 'eloston.ungoogled-chromium.locale.en-US.yaml');
     await replaceContent(latestVersionPath, newVersionPath, latestVersion, newVersion, 'eloston.ungoogled-chromium.yaml');
 
@@ -72,27 +69,19 @@ async function replaceContent(latestVersionPath, newVersionPath, latestVersion, 
     await fs.writeFile(path.join(newVersionPath, fileName), newContent, {encoding: 'utf-8'});
 }
 
-async function updateInstaller(latestVersionPath, newVersionPath, latestVersion, newVersion, x86Url, x64Url) {
-    const x86Hash = await calculateSHA256(x86Url);
+async function updateInstaller(latestVersionPath, newVersionPath, latestVersion, newVersion, x64Url) {
     const x64Hash = await calculateSHA256(x64Url);
     const content = await fs.readFile(path.join(latestVersionPath, 'eloston.ungoogled-chromium.installer.yaml'), {encoding: 'utf-8'});
     const data = yaml.load(content);
-    let oldX86Url, oldX64Url, oldX86Hash, oldX64Hash;
+    let oldX64Url, oldX64Hash;
     for (const installer of data.Installers) {
-        if (installer.Architecture === 'x86') {
-            oldX86Url = installer.InstallerUrl;
-            oldX86Hash = installer.InstallerSha256;
-        } else {
-            oldX64Url = installer.InstallerUrl;
-            oldX64Hash = installer.InstallerSha256;
-        }
+        oldX64Url = installer.InstallerUrl;
+        oldX64Hash = installer.InstallerSha256;
     }
 
     const newContent = content
         .replaceAll(`PackageVersion: ${data.PackageVersion}`, `PackageVersion: ${newVersion}`)
         .replaceAll(`ReleaseDate: ${data.ReleaseDate}`, `ReleaseDate: ${new Date().toLocaleDateString('en-CA')}`)
-        .replaceAll(oldX86Url, x86Url)
-        .replaceAll(oldX86Hash, x86Hash)
         .replaceAll(oldX64Url, x64Url)
         .replaceAll(oldX64Hash, x64Hash);
 
