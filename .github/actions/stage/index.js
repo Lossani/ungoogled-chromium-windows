@@ -9,7 +9,7 @@ async function run() {
     })
     const finished = core.getBooleanInput('finished', {required: true});
     const from_artifact = core.getBooleanInput('from_artifact', {required: true});
-    const x86 = core.getBooleanInput('x86', {required: false})
+    
     console.log(`finished: ${finished}, artifact: ${from_artifact}`);
     if (finished) {
         core.setOutput('finished', true);
@@ -17,7 +17,7 @@ async function run() {
     }
 
     const artifactClient = artifact.create();
-    const artifactName = x86 ? 'build-artifact-x86' : 'build-artifact';
+    const artifactName = 'build-artifact';
 
     if (from_artifact) {
         await artifactClient.downloadArtifact(artifactName, 'C:\\ungoogled-chromium-windows\\build');
@@ -27,8 +27,7 @@ async function run() {
     }
 
     const args = ['build.py', '--ci']
-    if (x86)
-        args.push('--x86')
+    
     const retCode = await exec.exec('python', args, {
         cwd: 'C:\\ungoogled-chromium-windows',
         ignoreReturnCode: true
@@ -40,13 +39,13 @@ async function run() {
         let packageList = await globber.glob();
         packageList = await Promise.all(packageList.map(async x => {
             const part1 = x.substr(0, x.length - 4);
-            const part2 = x86 ? '_x86' : '_x64';
+            const part2 = '_x64';
             const part3 = x.substr(x.length - 4, 4);
             const newPath = part1 + part2 + part3;
             await io.mv(x, newPath);
             return newPath;
         }));
-        await artifactClient.uploadArtifact(x86 ? 'chromium-x86' : 'chromium', packageList,
+        await artifactClient.uploadArtifact('chromium', packageList,
             'C:\\ungoogled-chromium-windows\\build', {retentionDays: 1});
     } else {
         await new Promise(r => setTimeout(r, 5000));
