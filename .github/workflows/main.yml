@@ -32,10 +32,6 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: chromium
-      - name: Download x86 package
-        uses: actions/download-artifact@v2
-        with:
-          name: chromium-x86
       - name: Publish release
         id: publish
         uses: softprops/action-gh-release@cd28b0f5ee8571b76cfdaa62a30d51d752317477
