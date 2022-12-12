@@ -20,7 +20,7 @@ jobs:
         id: stage
         uses: ./.github/actions/stage
         with:
-          finished: ${{ join(needs.*.outputs.finished) }}
+          finished: false
           from_artifact: true
     outputs:
       finished: ${{ steps.stage.outputs.finished }}
