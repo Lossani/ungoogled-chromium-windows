@@ -21,7 +21,7 @@ jobs:
         uses: ./.github/actions/stage
         with:
           finished: false
-          from_artifact: true
+          from_artifact: false
     outputs:
       finished: ${{ steps.stage.outputs.finished }}
   publish-release:
