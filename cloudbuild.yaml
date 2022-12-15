@@ -5,3 +5,5 @@ steps:
     - name: python
       entrypoint: python
       args: ["-m", "build.py", "--ci"]
+options:
+  logging: CLOUD_LOGGING_ONLY
