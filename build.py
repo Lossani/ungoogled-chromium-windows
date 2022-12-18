@@ -25,7 +25,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent / 'ungoogled-chromium' / 'utils'))
 import downloads
-import domain_substitution
+#import domain_substitution
+import replace_product_name
 import prune_binaries
 import patches
 from _common import ENCODING, USE_REGISTRY, ExtractorEnum, get_logger
@@ -195,11 +196,16 @@ def main():
         )
 
         # Substitute domains
-        domain_substitution.apply_substitution(
-            _ROOT_DIR / 'ungoogled-chromium' / 'domain_regex.list',
-            _ROOT_DIR / 'ungoogled-chromium' / 'domain_substitution.list',
-            source_tree,
-            domsubcache
+        # domain_substitution.apply_substitution(
+        #     _ROOT_DIR / 'ungoogled-chromium' / 'domain_regex.list',
+        #     _ROOT_DIR / 'ungoogled-chromium' / 'domain_substitution.list',
+        #     source_tree,
+        #     domsubcache
+        # )
+
+        # Substitute Chromium names
+        replace_product_name.apply_substitution(
+           source_tree
         )
 
     if not args.ci or not (source_tree / 'out/Default').exists():
