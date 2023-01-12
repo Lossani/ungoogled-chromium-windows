@@ -17,6 +17,8 @@ import os
 import platform
 from pathlib import Path
 import shutil
+#import fileinput
+#import re
 
 sys.path.insert(0, str(Path(__file__).resolve().parent / 'ungoogled-chromium' / 'utils'))
 import filescfg
@@ -46,7 +48,7 @@ def main():
     args = parser.parse_args()
 
     shutil.copyfile('build/src/out/Default/mini_installer.exe',
-        'build/ungoogled-chromium_{}-{}.{}_installer.exe'.format(
+        'build/croma_{}-{}.{}_installer.exe'.format(
             get_chromium_version(), _get_release_revision(), _get_packaging_revision()))
 
     # We need to remove these files, or they'll end up in the zip files that will be generated.
@@ -58,8 +60,23 @@ def main():
     except FileNotFoundError:
         pass
 
+    # try:
+    #     os.rename('build/src/out/Default/chrome.exe', 'build/src/out/Default/croma.exe')
+    # except:
+    #     pass
+
+    # try:
+    #     os.rename('build/src/out/Default/chrome.exe.pdb', 'build/src/out/Default/croma.exe.pdb')
+    # except:
+    #     pass
+    
+    # with fileinput.FileInput('build/src/chrome/tools/build/win/FILES.cfg', inplace=True, backup='', encoding='utf8') as file:
+    #       for line in file:
+    #           line = re.sub(r'chrome.exe', 'croma.exe', line)
+    #           print(line, end='')
+
     build_outputs = Path('build/src/out/Default')
-    output = Path('build/ungoogled-chromium_{}-{}.{}_windows.zip'.format(
+    output = Path('build/croma_{}-{}.{}_windows.zip'.format(
         get_chromium_version(), _get_release_revision(), _get_packaging_revision()))
 
     files_generator = filescfg.filescfg_generator(

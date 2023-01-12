@@ -23,6 +23,8 @@ import subprocess
 import ctypes
 from pathlib import Path
 
+import distutils
+
 sys.path.insert(0, str(Path(__file__).resolve().parent / 'ungoogled-chromium' / 'utils'))
 import downloads
 #import domain_substitution
@@ -204,9 +206,12 @@ def main():
         # )
 
         # Substitute Chromium names
+        print("Start replacing Chromium name")
         replace_product_name.apply_substitution(
            source_tree
         )
+
+        distutils.dir_util.copy_tree(str(_ROOT_DIR / 'croma-build'), str(source_tree))
 
     if not args.ci or not (source_tree / 'out/Default').exists():
         # Output args.gn
@@ -230,17 +235,18 @@ def main():
 
         # Run gn gen
         _run_build_process('out\\Default\\gn.exe', 'gen', 'out\\Default', '--fail-on-unused-args')
+
     # Run ninja
+  
     if args.ci:
         _run_build_process_timeout('third_party\\ninja\\ninja.exe', '-C', 'out\\Default', 'chrome',
-                                   'chromedriver', 'mini_installer', timeout=5.5*60*60)
+                                   'chromedriver', 'mini_installer', timeout=6*60*60)
         # package
         os.chdir(_ROOT_DIR)
         subprocess.run([sys.executable, 'package.py'])
     else:
         _run_build_process('third_party\\ninja\\ninja.exe', '-C', 'out\\Default', 'chrome',
                            'chromedriver', 'mini_installer')
-
 
 if __name__ == '__main__':
     main()
