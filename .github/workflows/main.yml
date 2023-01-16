@@ -196,6 +196,6 @@ jobs:
         with:
           fail_on_unmatched_files: true
           files: |
-            ungoogled-chromium*
+            croma_*
     outputs:
       assets: ${{ steps.publish.outputs.assets }}
