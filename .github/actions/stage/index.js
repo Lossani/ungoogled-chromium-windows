@@ -20,21 +20,21 @@ async function run() {
     const artifactName = 'build-artifact';
 
     if (from_artifact) {
-        await artifactClient.downloadArtifact(artifactName, 'C:\\ungoogled-chromium-windows\\build');
-        await exec.exec('7z', ['x', 'C:\\ungoogled-chromium-windows\\build\\artifacts.zip',
-            '-oC:\\ungoogled-chromium-windows\\build', '-y']);
-        await io.rmRF('C:\\ungoogled-chromium-windows\\build\\artifacts.zip');
+        await artifactClient.downloadArtifact(artifactName, 'C:\\croma-windows\\build');
+        await exec.exec('7z', ['x', 'C:\\croma-windows\\build\\artifacts.zip',
+            '-oC:\\croma-windows\\build', '-y']);
+        await io.rmRF('C:\\croma-windows\\build\\artifacts.zip');
     }
 
     const args = ['build.py', '--ci']
     
     const retCode = await exec.exec('python', args, {
-        cwd: 'C:\\ungoogled-chromium-windows',
+        cwd: 'C:\\croma-windows',
         ignoreReturnCode: true
     });
     if (retCode === 0) {
         core.setOutput('finished', true);
-        const globber = await glob.create('C:\\ungoogled-chromium-windows\\build\\ungoogled-chromium*',
+        const globber = await glob.create('C:\\croma-windows\\build\\croma_*',
             {matchDirectories: false});
         let packageList = await globber.glob();
         packageList = await Promise.all(packageList.map(async x => {
@@ -46,13 +46,13 @@ async function run() {
             return newPath;
         }));
         await artifactClient.uploadArtifact('chromium', packageList,
-            'C:\\ungoogled-chromium-windows\\build', {retentionDays: 1});
+            'C:\\croma-windows\\build', {retentionDays: 1});
     } else {
         await new Promise(r => setTimeout(r, 5000));
-        await exec.exec('7z', ['a', '-tzip', 'C:\\ungoogled-chromium-windows\\artifacts.zip',
-            'C:\\ungoogled-chromium-windows\\build\\src', '-mx=3', '-mtc=on'], {ignoreReturnCode: true});
-        await artifactClient.uploadArtifact(artifactName, ['C:\\ungoogled-chromium-windows\\artifacts.zip'],
-            'C:\\ungoogled-chromium-windows', {retentionDays: 1});
+        await exec.exec('7z', ['a', '-tzip', 'C:\\croma-windows\\artifacts.zip',
+            'C:\\croma-windows\\build\\src', '-mx=3', '-mtc=on'], {ignoreReturnCode: true});
+        await artifactClient.uploadArtifact(artifactName, ['C:\\croma-windows\\artifacts.zip'],
+            'C:\\croma-windows', {retentionDays: 1});
         core.setOutput('finished', false);
     }
 }
