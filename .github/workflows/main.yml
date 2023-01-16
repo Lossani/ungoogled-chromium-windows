@@ -23,7 +23,7 @@ jobs:
         with:
           submodules: 'recursive'
       - name: Init
-        run: Copy-Item -Path . -Destination "C:\ungoogled-chromium-windows" -Recurse
+        run: Copy-Item -Path . -Destination "C:\croma-windows" -Recurse
       - name: Setup Stage
         run: npm install
         working-directory: ./.github/actions/stage
@@ -44,7 +44,7 @@ jobs:
         with:
           submodules: 'recursive'
       - name: Init
-        run: Copy-Item -Path . -Destination "C:\ungoogled-chromium-windows" -Recurse
+        run: Copy-Item -Path . -Destination "C:\croma-windows" -Recurse
       - name: Setup Stage
         run: npm install
         working-directory: ./.github/actions/stage
@@ -65,7 +65,7 @@ jobs:
         with:
           submodules: 'recursive'
       - name: Init
-        run: Copy-Item -Path . -Destination "C:\ungoogled-chromium-windows" -Recurse
+        run: Copy-Item -Path . -Destination "C:\croma-windows" -Recurse
       - name: Setup Stage
         run: npm install
         working-directory: ./.github/actions/stage
@@ -86,7 +86,7 @@ jobs:
         with:
           submodules: 'recursive'
       - name: Init
-        run: Copy-Item -Path . -Destination "C:\ungoogled-chromium-windows" -Recurse
+        run: Copy-Item -Path . -Destination "C:\croma-windows" -Recurse
       - name: Setup Stage
         run: npm install
         working-directory: ./.github/actions/stage
@@ -107,7 +107,7 @@ jobs:
         with:
           submodules: 'recursive'
       - name: Init
-        run: Copy-Item -Path . -Destination "C:\ungoogled-chromium-windows" -Recurse
+        run: Copy-Item -Path . -Destination "C:\croma-windows" -Recurse
       - name: Setup Stage
         run: npm install
         working-directory: ./.github/actions/stage
@@ -128,7 +128,7 @@ jobs:
         with:
           submodules: 'recursive'
       - name: Init
-        run: Copy-Item -Path . -Destination "C:\ungoogled-chromium-windows" -Recurse
+        run: Copy-Item -Path . -Destination "C:\croma-windows" -Recurse
       - name: Setup Stage
         run: npm install
         working-directory: ./.github/actions/stage
@@ -149,7 +149,7 @@ jobs:
         with:
           submodules: 'recursive'
       - name: Init
-        run: Copy-Item -Path . -Destination "C:\ungoogled-chromium-windows" -Recurse
+        run: Copy-Item -Path . -Destination "C:\croma-windows" -Recurse
       - name: Setup Stage
         run: npm install
         working-directory: ./.github/actions/stage
@@ -170,7 +170,7 @@ jobs:
         with:
           submodules: 'recursive'
       - name: Init
-        run: Copy-Item -Path . -Destination "C:\ungoogled-chromium-windows" -Recurse
+        run: Copy-Item -Path . -Destination "C:\croma-windows" -Recurse
       - name: Setup Stage
         run: npm install
         working-directory: ./.github/actions/stage
