@@ -175,13 +175,13 @@ def main():
         downloads.unpack_downloads(download_info, downloads_cache, source_tree, extractors)
 
         # Prune binaries
-        unremovable_files = prune_binaries.prune_dir(
-            source_tree,
-            (_ROOT_DIR / 'ungoogled-chromium' / 'pruning.list').read_text(encoding=ENCODING).splitlines()
-        )
-        if unremovable_files:
-            get_logger().error('Files could not be pruned: %s', unremovable_files)
-            parser.exit(1)
+        # unremovable_files = prune_binaries.prune_dir(
+        #     source_tree,
+        #     (_ROOT_DIR / 'ungoogled-chromium' / 'pruning.list').read_text(encoding=ENCODING).splitlines()
+        # )
+        # if unremovable_files:
+        #     get_logger().error('Files could not be pruned: %s', unremovable_files)
+        #     parser.exit(1)
 
         # Apply patches
         # First, ungoogled-chromium-patches
@@ -191,11 +191,11 @@ def main():
             patch_bin_path=(source_tree / _PATCH_BIN_RELPATH)
         )
         # Then Windows-specific patches
-        patches.apply_patches(
-            patches.generate_patches_from_series(_ROOT_DIR / 'patches', resolve=True),
-            source_tree,
-            patch_bin_path=(source_tree / _PATCH_BIN_RELPATH)
-        )
+        #patches.apply_patches(
+        #    patches.generate_patches_from_series(_ROOT_DIR / 'patches', resolve=True),
+        #    source_tree,
+        #    patch_bin_path=(source_tree / _PATCH_BIN_RELPATH)
+        #)
 
         # Substitute domains
         # domain_substitution.apply_substitution(
