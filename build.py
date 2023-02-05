@@ -186,7 +186,7 @@ def main():
         # Apply patches
         # First, ungoogled-chromium-patches
         patches.apply_patches(
-            patches.generate_patches_from_series(_ROOT_DIR / 'ungoogled-chromium' / 'patches', resolve=True),
+            patches.generate_patches_from_series(_ROOT_DIR / 'ungoogled-chromium' / 'patches', resolve = True),
             source_tree,
             patch_bin_path=(source_tree / _PATCH_BIN_RELPATH)
         )
