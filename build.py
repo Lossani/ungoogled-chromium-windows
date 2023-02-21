@@ -175,13 +175,13 @@ def main():
         downloads.unpack_downloads(download_info, downloads_cache, source_tree, extractors)
 
         # Prune binaries
-        # unremovable_files = prune_binaries.prune_dir(
-        #     source_tree,
-        #     (_ROOT_DIR / 'ungoogled-chromium' / 'pruning.list').read_text(encoding=ENCODING).splitlines()
-        # )
-        # if unremovable_files:
-        #     get_logger().error('Files could not be pruned: %s', unremovable_files)
-        #     parser.exit(1)
+        unremovable_files = prune_binaries.prune_dir(
+            source_tree,
+            (_ROOT_DIR / 'ungoogled-chromium' / 'pruning.list').read_text(encoding=ENCODING).splitlines()
+        )
+        if unremovable_files:
+            get_logger().error('Files could not be pruned: %s', unremovable_files)
+            parser.exit(1)
 
         # Apply patches
         # First, ungoogled-chromium-patches
@@ -240,7 +240,7 @@ def main():
   
     if args.ci:
         _run_build_process_timeout('third_party\\ninja\\ninja.exe', '-C', 'out\\Default', 'chrome',
-                                   'chromedriver', 'mini_installer', timeout=4.5*60*60)
+                                   'chromedriver', 'mini_installer', timeout=4.6*60*60)
         # package
         os.chdir(_ROOT_DIR)
         subprocess.run([sys.executable, 'package.py'])
