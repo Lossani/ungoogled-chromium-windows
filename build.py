@@ -137,6 +137,10 @@ def main():
         '--x86',
         action='store_true'
     )
+    parser.add_argument(
+        '--j',
+        choices = [str(x) for x in range(1, 17)]
+    )
     args = parser.parse_args()
 
     # Set common variables
@@ -186,7 +190,7 @@ def main():
         # Apply patches
         # First, ungoogled-chromium-patches
         patches.apply_patches(
-            patches.generate_patches_from_series(_ROOT_DIR / 'ungoogled-chromium' / 'patches', resolve = True),
+            patches.generate_patches_from_series(_ROOT_DIR / 'ungoogled-chromium' / 'patches', resolve=True),
             source_tree,
             patch_bin_path=(source_tree / _PATCH_BIN_RELPATH)
         )
@@ -239,8 +243,13 @@ def main():
     # Run ninja
   
     if args.ci:
-        _run_build_process_timeout('third_party\\ninja\\ninja.exe', '-C', 'out\\Default', 'chrome',
-                                   'chromedriver', 'mini_installer', timeout=4.6*60*60)
+        if args.j:
+            print(args)
+            _run_build_process_timeout('third_party\\ninja\\ninja.exe', '-j' + args.j, '-C', 'out\\Default', 'chrome',
+                                    'chromedriver', 'mini_installer', timeout = 12*60*60)
+        else:
+            _run_build_process_timeout('third_party\\ninja\\ninja.exe', '-C', 'out\\Default', 'chrome',
+                                    'chromedriver', 'mini_installer', timeout = 12*60*60)
         # package
         os.chdir(_ROOT_DIR)
         subprocess.run([sys.executable, 'package.py'])
