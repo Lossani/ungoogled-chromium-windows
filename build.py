@@ -142,7 +142,6 @@ def main():
     # Set common variables
     source_tree = _ROOT_DIR / 'build' / 'src'
     downloads_cache = _ROOT_DIR / 'build' / 'download_cache'
-    domsubcache = _ROOT_DIR / 'build' / 'domsubcache.tar.gz'
 
     if not args.ci or not (source_tree / 'BUILD.gn').exists():
         # Setup environment
@@ -235,9 +234,7 @@ def main():
 
         # Run gn gen
         _run_build_process('out\\Default\\gn.exe', 'gen', 'out\\Default', '--fail-on-unused-args')
-
     # Run ninja
-  
     if args.ci:
         _run_build_process_timeout('third_party\\ninja\\ninja.exe', '-C', 'out\\Default', 'chrome',
                                    'chromedriver', 'mini_installer', timeout=4.5*60*60)
@@ -247,6 +244,7 @@ def main():
     else:
         _run_build_process('third_party\\ninja\\ninja.exe', '-C', 'out\\Default', 'chrome',
                            'chromedriver', 'mini_installer')
+
 
 if __name__ == '__main__':
     main()

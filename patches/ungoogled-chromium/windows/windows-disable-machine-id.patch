@@ -3,10 +3,10 @@
 
 --- a/chrome/browser/ungoogled_platform_flag_entries.h
 +++ b/chrome/browser/ungoogled_platform_flag_entries.h
-@@ -4,4 +4,8 @@
- 
- #ifndef CHROME_BROWSER_UNGOOGLED_PLATFORM_FLAG_ENTRIES_H_
- #define CHROME_BROWSER_UNGOOGLED_PLATFORM_FLAG_ENTRIES_H_
+@@ -8,4 +8,8 @@
+      "Disable encryption",
+      "Disable encryption of cookies, passwords, and settings which uses a generated machine-specific encryption key.  This is used to enable portable user data directories.  ungoogled-chromium flag.",
+      kOsWin, SINGLE_VALUE_TYPE("disable-encryption")},
 +    {"disable-machine-id",
 +     "Disable machine ID",
 +     "Disables use of a generated machine-specific ID to lock the user data directory to that machine.  This is used to enable portable user data directories.  ungoogled-chromium flag.",
@@ -20,9 +20,9 @@
  #include "base/base_paths.h"
 +#include "base/command_line.h"
  #include "base/files/file_path.h"
+ #include "base/notreached.h"
  #include "base/path_service.h"
- #include "base/threading/scoped_blocking_call.h"
-@@ -18,6 +19,9 @@ namespace metrics {
+@@ -19,6 +20,9 @@ namespace metrics {
  
  // static
  bool MachineIdProvider::HasId() {
@@ -32,7 +32,7 @@
    return true;
  }
  
-@@ -25,6 +29,10 @@ bool MachineIdProvider::HasId() {
+@@ -26,6 +30,10 @@ bool MachineIdProvider::HasId() {
  // is running from.
  // static
  std::string MachineIdProvider::GetMachineId() {

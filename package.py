@@ -17,8 +17,6 @@ import os
 import platform
 from pathlib import Path
 import shutil
-#import fileinput
-#import re
 
 sys.path.insert(0, str(Path(__file__).resolve().parent / 'ungoogled-chromium' / 'utils'))
 import filescfg
@@ -59,21 +57,6 @@ def main():
         os.remove('build/src/out/Default/chrome.packed.7z')
     except FileNotFoundError:
         pass
-
-    # try:
-    #     os.rename('build/src/out/Default/chrome.exe', 'build/src/out/Default/croma.exe')
-    # except:
-    #     pass
-
-    # try:
-    #     os.rename('build/src/out/Default/chrome.exe.pdb', 'build/src/out/Default/croma.exe.pdb')
-    # except:
-    #     pass
-    
-    # with fileinput.FileInput('build/src/chrome/tools/build/win/FILES.cfg', inplace=True, backup='', encoding='utf8') as file:
-    #       for line in file:
-    #           line = re.sub(r'chrome.exe', 'croma.exe', line)
-    #           print(line, end='')
 
     build_outputs = Path('build/src/out/Default')
     output = Path('build/croma_{}-{}.{}_windows.zip'.format(

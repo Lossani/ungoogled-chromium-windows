@@ -45,14 +45,32 @@ async function run() {
             await io.mv(x, newPath);
             return newPath;
         }));
-        await artifactClient.uploadArtifact('chromium', packageList,
-            'C:\\croma-windows\\build', {retentionDays: 1});
+        for (let i = 0; i < 5; ++i) {
+            try {
+                await artifactClient.uploadArtifact('chromium', packageList,
+                    'C:\\croma-windows\\build', {retentionDays: 3});
+                break;
+            } catch (e) {
+                console.error(`Upload artifact failed: ${e}`);
+                // Wait 10 seconds between the attempts
+                await new Promise(r => setTimeout(r, 10000));
+            }
+        }
     } else {
         await new Promise(r => setTimeout(r, 5000));
         await exec.exec('7z', ['a', '-tzip', 'C:\\croma-windows\\artifacts.zip',
             'C:\\croma-windows\\build\\src', '-mx=3', '-mtc=on'], {ignoreReturnCode: true});
-        await artifactClient.uploadArtifact(artifactName, ['C:\\croma-windows\\artifacts.zip'],
-            'C:\\croma-windows', {retentionDays: 1});
+        for (let i = 0; i < 5; ++i) {
+            try {
+                await artifactClient.uploadArtifact(artifactName, ['C:\\croma-windows\\artifacts.zip'],
+                    'C:\\croma-windows', {retentionDays: 3});
+                break;
+            } catch (e) {
+                console.error(`Upload artifact failed: ${e}`);
+                // Wait 10 seconds between the attempts
+                await new Promise(r => setTimeout(r, 10000));
+            }
+        }
         core.setOutput('finished', false);
     }
 }

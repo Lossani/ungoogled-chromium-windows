@@ -13,7 +13,7 @@
      "//third_party/icu:icudata",
 --- a/chrome/tools/build/win/create_installer_archive.py
 +++ b/chrome/tools/build/win/create_installer_archive.py
-@@ -171,12 +171,14 @@ def GenerateDiffPatch(options, orig_file
+@@ -182,12 +182,14 @@ def GenerateDiffPatch(options, orig_file
    RunSystemCommand(cmd, options.verbose)
  
  def GetLZMAExec(build_dir):
