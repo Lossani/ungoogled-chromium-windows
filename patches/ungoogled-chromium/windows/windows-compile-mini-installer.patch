@@ -20,7 +20,7 @@
 -  executable = '7za'
 -  if sys.platform == 'win32':
 -    executable += '.exe'
-+  # Taken from ungoogled-chromium's _extraction.py file, modified for Python 2
++  # Taken from croma's _extraction.py file, modified for Python 2
 +  import winreg
 +  sub_key_7zfm = 'SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\7zFM.exe'
  

@@ -37,6 +37,81 @@ sys.path.pop(0)
 _ROOT_DIR = Path(__file__).resolve().parent
 _PATCH_BIN_RELPATH = Path('third_party/git/usr/bin/patch.exe')
 
+def _backup_patched_files():
+    with open('affected_files.txt', 'r') as file:
+            Lines = file.readlines()
+            # Strips the newline character
+            for line in Lines:
+                line = line.replace('/', '\\')
+                line = line.replace('\n', '')
+                relative_path = 'build\\patched_files\\'
+                if '\\' in line:
+                    file_relative_path = line[:line.rfind('\\')]
+                    relative_path +=  file_relative_path
+
+                if not os.path.exists(relative_path):
+                    os.makedirs(relative_path)
+                    
+                try:
+                    shutil.copyfile('build\\src\\' + line, 'build\\patched_files\\' + line)
+                except Exception as ex:
+                    print ("Error trying to backup patched file:", str(ex))
+                    pass
+                
+def _backup_pruned_files():
+    '''
+        with open(_ROOT_DIR / 'ungoogled-chromium' / 'pruning.list', 'r') as file:
+            Lines = file.readlines()
+            # Strips the newline character
+            for line in Lines:
+                line = line.replace('/', '\\')
+                line = line.replace('\n', '')
+                shutil.copyfile('build\\src\\' + line, 'build\\prunned_binaries\\' + line)
+        '''
+    with open('ungoogled-chromium\\pruning.list', 'r') as file:
+            Lines = file.readlines()
+            # Strips the newline character
+            for line in Lines:
+                line = line.replace('/', '\\')
+                line = line.replace('\n', '')
+                relative_path = 'build\\pruned_files\\'
+                if '\\' in line:
+                    file_relative_path = line[:line.rfind('\\')]
+                    relative_path +=  file_relative_path
+
+                if not os.path.exists(relative_path):
+                    os.makedirs(relative_path)
+                    
+                try:
+                    shutil.copyfile('build\\src\\' + line, 'build\\pruned_files\\' + line)
+                except Exception as ex:
+                    print ("Error trying to backup pruned file:", str(ex))
+                    pass
+                
+def _restore_patched_files():
+    shutil.copytree('build\\patched_files', 'build\\src', dirs_exist_ok = True)
+    
+    with open('patches_created_files.txt', 'r') as file:
+            Lines = file.readlines()
+            # Strips the newline character
+            for line in Lines:
+                line = line.replace('/', '\\')
+                line = line.replace('\n', '')
+                relative_path = 'build\\' + line
+                try:
+                    os.remove(relative_path)
+                except Exception as ex:
+                    print ("Error trying to remove created file from patches:", str(ex))
+                    pass
+    # os.remove('build\\src\\chrome\\browser\\bromite_flag_choices.h')
+    # os.remove('build\\src\\chrome\\browser\\bromite_flag_entries.h')
+    # os.remove('build\\src\\chrome\\browser\\croma_flag_choices.h')
+    # os.remove('build\\src\\chrome\\browser\\croma_flag_entries.h')
+    # os.remove('build\\src\\chrome\\browser\\croma_platform_flag_choices.h')
+    # os.remove('build\\src\\chrome\\browser\\croma_platform_flag_entries.h')
+    # os.remove('build\\src\\components\\croma\\BUILD.gn')
+    # os.remove('build\\src\\components\\croma\\ungoogled_switches.h')
+    # os.remove('build\\src\\components\\croma\\ungoogled_switches.cc')
 
 def _get_vcvars_path(name='64'):
     """
@@ -137,6 +212,10 @@ def main():
         '--x86',
         action='store_true'
     )
+    parser.add_argument(
+        '--j',
+        choices = [str(x) for x in range(1, 17)]
+    )
     args = parser.parse_args()
 
     # Set common variables
@@ -144,34 +223,45 @@ def main():
     downloads_cache = _ROOT_DIR / 'build' / 'download_cache'
 
     if not args.ci or not (source_tree / 'BUILD.gn').exists():
-        # Setup environment
-        source_tree.mkdir(parents=True, exist_ok=True)
-        downloads_cache.mkdir(parents=True, exist_ok=True)
-        _make_tmp_paths()
+        
+        if not source_tree.exists():
+            # Setup environment
+            source_tree.mkdir(parents=True, exist_ok=True)
+            downloads_cache.mkdir(parents=True, exist_ok=True)
 
-        # Get download metadata (DownloadInfo)
-        download_info = downloads.DownloadInfo([
-            _ROOT_DIR / 'downloads.ini',
-            _ROOT_DIR / 'ungoogled-chromium' / 'downloads.ini',
-        ])
+            _make_tmp_paths()
 
-        # Retrieve downloads
-        get_logger().info('Downloading required files...')
-        downloads.retrieve_downloads(download_info, downloads_cache, True,
-                                              args.disable_ssl_verification)
-        try:
-            downloads.check_downloads(download_info, downloads_cache)
-        except downloads.HashMismatchError as exc:
-            get_logger().error('File checksum does not match: %s', exc)
-            exit(1)
+            # Get download metadata (DownloadInfo)
+            download_info = downloads.DownloadInfo([
+                _ROOT_DIR / 'downloads.ini',
+                _ROOT_DIR / 'ungoogled-chromium' / 'downloads.ini',
+            ])
 
-        # Unpack downloads
-        extractors = {
-            ExtractorEnum.SEVENZIP: args.sevenz_path,
-            ExtractorEnum.WINRAR: args.winrar_path,
-        }
-        get_logger().info('Unpacking downloads...')
-        downloads.unpack_downloads(download_info, downloads_cache, source_tree, extractors)
+            # Retrieve downloads
+            get_logger().info('Downloading required files...')
+            downloads.retrieve_downloads(download_info, downloads_cache, True,
+                                                args.disable_ssl_verification)
+            try:
+                downloads.check_downloads(download_info, downloads_cache)
+            except downloads.HashMismatchError as exc:
+                get_logger().error('File checksum does not match: %s', exc)
+                exit(1)
+
+            # Unpack downloads
+            extractors = {
+                ExtractorEnum.SEVENZIP: args.sevenz_path,
+                ExtractorEnum.WINRAR: args.winrar_path,
+            }
+            get_logger().info('Unpacking downloads...')
+            downloads.unpack_downloads(download_info, downloads_cache, source_tree, extractors)
+        
+        if not os.path.exists('build\\patched_files\\'):
+            os.makedirs('build\\patched_files\\')
+            _backup_patched_files()
+                    
+        if not os.path.exists('build\\pruned_files\\'):
+            os.makedirs('build\\pruned_files\\')
+            _backup_pruned_files()
 
         # Prune binaries
         unremovable_files = prune_binaries.prune_dir(
@@ -180,22 +270,26 @@ def main():
         )
         if unremovable_files:
             get_logger().error('Files could not be pruned: %s', unremovable_files)
-            parser.exit(1)
+            #parser.exit(1)
+        
 
-        # Apply patches
-        # First, ungoogled-chromium-patches
-        patches.apply_patches(
-            patches.generate_patches_from_series(_ROOT_DIR / 'ungoogled-chromium' / 'patches', resolve=True),
-            source_tree,
-            patch_bin_path=(source_tree / _PATCH_BIN_RELPATH)
-        )
-        # Then Windows-specific patches
-        patches.apply_patches(
-            patches.generate_patches_from_series(_ROOT_DIR / 'patches', resolve=True),
-            source_tree,
-            patch_bin_path=(source_tree / _PATCH_BIN_RELPATH)
-        )
-
+        try:
+            # Apply patches
+            # First, ungoogled-chromium-patches
+            patches.apply_patches(
+                patches.generate_patches_from_series(_ROOT_DIR / 'ungoogled-chromium' / 'patches', resolve=True),
+                source_tree,
+                patch_bin_path=(source_tree / _PATCH_BIN_RELPATH)
+            )
+            # Then Windows-specific patches
+            patches.apply_patches(
+                patches.generate_patches_from_series(_ROOT_DIR / 'patches', resolve=True),
+                source_tree,
+                patch_bin_path=(source_tree / _PATCH_BIN_RELPATH)
+            )
+        except:
+            _restore_patched_files()
+            raise
         # Substitute domains
         # domain_substitution.apply_substitution(
         #     _ROOT_DIR / 'ungoogled-chromium' / 'domain_regex.list',
@@ -234,10 +328,17 @@ def main():
 
         # Run gn gen
         _run_build_process('out\\Default\\gn.exe', 'gen', 'out\\Default', '--fail-on-unused-args')
+
     # Run ninja
+  
     if args.ci:
-        _run_build_process_timeout('third_party\\ninja\\ninja.exe', '-C', 'out\\Default', 'chrome',
-                                   'chromedriver', 'mini_installer', timeout=4.5*60*60)
+        if args.j:
+            print(args)
+            _run_build_process_timeout('third_party\\ninja\\ninja.exe', '-j' + args.j, '-C', 'out\\Default', 'chrome',
+                                    'chromedriver', 'mini_installer', timeout = 45*60*60)
+        else:
+            _run_build_process_timeout('third_party\\ninja\\ninja.exe', '-C', 'out\\Default', 'chrome',
+                                    'chromedriver', 'mini_installer', timeout = 45*60*60)
         # package
         os.chdir(_ROOT_DIR)
         subprocess.run([sys.executable, 'package.py'])
