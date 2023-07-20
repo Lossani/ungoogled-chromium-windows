@@ -24,6 +24,7 @@ import ctypes
 from pathlib import Path
 
 import distutils
+from distutils.dir_util import copy_tree
 
 sys.path.insert(0, str(Path(__file__).resolve().parent / 'ungoogled-chromium' / 'utils'))
 import downloads
@@ -86,10 +87,9 @@ def _backup_pruned_files():
                     shutil.copyfile('build\\src\\' + line, 'build\\pruned_files\\' + line)
                 except Exception as ex:
                     print ("Error trying to backup pruned file:", str(ex))
-                    pass
                 
 def _restore_patched_files():
-    shutil.copytree('build\\patched_files', 'build\\src', dirs_exist_ok = True)
+    copy_tree('build\\patched_files', 'build\\src')
     
     with open('patches_created_files.txt', 'r') as file:
             Lines = file.readlines()
@@ -97,7 +97,7 @@ def _restore_patched_files():
             for line in Lines:
                 line = line.replace('/', '\\')
                 line = line.replace('\n', '')
-                relative_path = 'build\\' + line
+                relative_path = 'build\\src\\' + line
                 try:
                     os.remove(relative_path)
                 except Exception as ex:
@@ -254,23 +254,24 @@ def main():
             }
             get_logger().info('Unpacking downloads...')
             downloads.unpack_downloads(download_info, downloads_cache, source_tree, extractors)
-        
-        if not os.path.exists('build\\patched_files\\'):
-            os.makedirs('build\\patched_files\\')
+
+        if not os.path.exists(_ROOT_DIR / 'build' / 'patched_files'):
+            os.makedirs(_ROOT_DIR / 'build' / 'patched_files')
             _backup_patched_files()
                     
-        if not os.path.exists('build\\pruned_files\\'):
-            os.makedirs('build\\pruned_files\\')
+        if not os.path.exists(_ROOT_DIR / 'build' / 'pruned_files'):
+            os.makedirs(_ROOT_DIR / 'build' / 'pruned_files')
             _backup_pruned_files()
 
         # Prune binaries
-        unremovable_files = prune_binaries.prune_dir(
-            source_tree,
-            (_ROOT_DIR / 'ungoogled-chromium' / 'pruning.list').read_text(encoding=ENCODING).splitlines()
-        )
-        if unremovable_files:
-            get_logger().error('Files could not be pruned: %s', unremovable_files)
-            #parser.exit(1)
+        # unremovable_files = prune_binaries.prune_dir(
+        #     source_tree,
+        #     (_ROOT_DIR / 'ungoogled-chromium' / 'pruning.list').read_text(encoding=ENCODING).splitlines()
+        # )
+        # if unremovable_files:
+        #     #get_logger().error('Files could not be pruned: %s', unremovable_files)
+        #     get_logger().error('Files could not be pruned')
+        #     #parser.exit(1)
         
 
         try:
@@ -304,7 +305,7 @@ def main():
            source_tree
         )
 
-        distutils.dir_util.copy_tree(str(_ROOT_DIR / 'croma-build'), str(source_tree))
+        copy_tree(str(_ROOT_DIR / 'croma-build'), str(source_tree))
 
     if not args.ci or not (source_tree / 'out/Default').exists():
         # Output args.gn

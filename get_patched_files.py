@@ -4,8 +4,7 @@ affected_files = []
 new_files = []
 patches_path = [
     'patches',
-    'ungoogled-chromium\\patches\\core',
-    'ungoogled-chromium\\patches\\extra'
+    'ungoogled-chromium\\patches',
 ]
 
 for ppath in patches_path:
