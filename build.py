@@ -22,6 +22,7 @@ import shutil
 import subprocess
 import ctypes
 from pathlib import Path
+from datetime import  datetime
 
 import distutils
 from distutils.dir_util import copy_tree
@@ -343,6 +344,7 @@ def main():
         # package
         os.chdir(_ROOT_DIR)
         subprocess.run([sys.executable, 'package.py'])
+        print(datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
     else:
         _run_build_process('third_party\\ninja\\ninja.exe', '-C', 'out\\Default', 'chrome',
                            'chromedriver', 'mini_installer')

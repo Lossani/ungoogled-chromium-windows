@@ -43,7 +43,6 @@ tools/licenses/licenses.py
 media/formats/mp2t/es_parser_adts.cc
 build/build_config.h
 chrome/browser/web_applications/chrome_pwa_launcher/chrome_pwa_launcher_exe.rc
-tools/v8_context_snapshot/BUILD.gn
 build/toolchain/win/toolchain.gni
 build/config/win/BUILD.gn
 chrome/browser/flags/android/java/src/org/chromium/chrome/browser/flags/ChromeFeatureList.java
@@ -108,7 +107,6 @@ components/drive/service/drive_api_service.cc
 components/feedback/feedback_uploader.cc
 components/google/core/common/google_util.cc
 components/history/core/browser/web_history_service.cc
-components/metrics/url_constants.cc
 components/safe_browsing/content/browser/client_side_detection_service.cc
 components/safe_search_api/safe_search/safe_search_url_checker_client.cc
 components/safe_search_api/stub_url_checker.cc
@@ -137,7 +135,10 @@ chrome/browser/new_tab_page/promos/promo_service.cc
 chrome/browser/resources/discards/graph_doc_template.html
 chrome/browser/search/background/ntp_background_service.cc
 components/assist_ranker/ranker_url_fetcher.cc
+components/password_manager/core/browser/affiliation/hash_affiliation_fetcher.cc
+components/password_manager/core/browser/affiliation/hash_affiliation_fetcher.h
 components/update_client/update_checker.cc
+third_party/devtools-frontend/src/front_end/panels/elements/WebCustomData.ts
 chrome/browser/autocomplete/chrome_autocomplete_scheme_classifier.cc
 chrome/browser/history/history_utils.cc
 chrome/browser/ui/singleton_tabs.cc
@@ -175,7 +176,6 @@ components/search_engines/template_url.cc
 components/variations/net/variations_http_headers.cc
 net/base/url_util.cc
 components/network_time/network_time_tracker.cc
-chrome/browser/privacy_sandbox/privacy_sandbox_settings_delegate.cc
 components/privacy_sandbox/privacy_sandbox_prefs.cc
 components/privacy_sandbox/privacy_sandbox_settings_impl.cc
 content/browser/aggregation_service/aggregation_service_features.cc
@@ -257,6 +257,7 @@ components/password_manager/core/browser/password_manager_client.h
 components/safe_browsing/content/common/proto/BUILD.gn
 components/safe_browsing/content/common/safe_browsing.mojom
 components/safe_browsing/core/browser/BUILD.gn
+components/safe_browsing/core/browser/db/hash_prefix_map.h
 components/safe_browsing/core/browser/hashprefix_realtime/hash_realtime_service.h
 components/safe_browsing/core/browser/hashprefix_realtime/ohttp_key_service.cc
 components/safe_browsing/core/browser/verdict_cache_manager.cc
@@ -278,6 +279,7 @@ chrome/browser/android/signin/signin_manager_android.h
 chrome/browser/ash/lock_screen_apps/lock_screen_profile_creator_impl.cc
 chrome/browser/ash/lock_screen_apps/lock_screen_profile_creator_impl_unittest.cc
 chrome/browser/ash/login/signin/device_id_browsertest.cc
+chrome/browser/browsing_data/chrome_browsing_data_lifetime_manager.cc
 chrome/browser/download/download_browsertest.cc
 chrome/browser/extensions/api/identity/identity_apitest.cc
 chrome/browser/extensions/api/identity/identity_get_auth_token_function.cc
@@ -376,7 +378,7 @@ chrome/browser/ui/webui/settings/people_handler.cc
 chrome/browser/ui/webui/settings/safety_check_handler.cc
 chrome/browser/ui/webui/settings/settings_localized_strings_provider.cc
 chrome/browser/ui/webui/settings/settings_ui.cc
-chrome/browser/ui/webui/side_panel/companion/signin_delegate.cc
+chrome/browser/ui/webui/side_panel/companion/signin_delegate_impl.cc
 chrome/browser/ui/webui/signin/inline_login_handler.cc
 chrome/browser/ui/webui/signin/inline_login_handler_impl.cc
 chrome/browser/ui/webui/signin/signin_error_ui.cc
@@ -468,7 +470,6 @@ components/translate/core/browser/translate_ranker_impl.cc
 components/translate/core/browser/translate_script.cc
 chrome/browser/about_flags.cc
 chrome/browser/app_controller_mac.mm
-chrome/browser/browsing_data/chrome_browsing_data_lifetime_manager.cc
 chrome/browser/browsing_data/chrome_browsing_data_lifetime_manager_factory.cc
 chrome/browser/download/download_crx_util.cc
 chrome/browser/download/download_crx_util.h
@@ -588,15 +589,20 @@ chrome/browser/search/search.cc
 chrome/browser/ui/startup/startup_tab_provider.cc
 chrome/browser/chrome_browser_main.cc
 components/content_settings/core/browser/content_settings_registry.cc
+chrome/browser/ui/frame/window_frame_util.cc
 chrome/common/chrome_features.h
+components/BUILD.gn
 content/browser/renderer_host/navigation_request.cc
 third_party/blink/renderer/modules/service_worker/web_service_worker_fetch_context_impl.cc
 third_party/blink/renderer/platform/loader/fetch/url_loader/dedicated_or_shared_worker_fetch_context_impl.cc
+tools/v8_context_snapshot/BUILD.gn
 components/download/internal/common/base_file.cc
 content/browser/renderer_host/pepper/pepper_file_io_host.cc
 content/browser/renderer_host/pepper/pepper_file_io_host.h
 chrome/browser/intranet_redirect_detector.cc
 components/optimization_guide/core/optimization_guide_features.cc
+chrome/browser/ui/webui/chrome_web_ui_controller_factory.cc
+chrome/common/webui_url_constants.cc
 chrome/browser/resources/extensions/item_list.html
 chrome/browser/resources/extensions/sidebar.html
 chrome/browser/resources/history/side_bar.html
@@ -613,4 +619,5 @@ chrome/browser/resources/settings/privacy_page/personalization_options.html
 chrome/browser/resources/settings/search_page/search_page.html
 chrome/browser/resources/settings/settings_page/settings_subpage.html
 chrome/browser/ui/views/sad_tab_view.cc
-components/omnibox/browser/autocomplete_controller.h
+media/base/media_switches.cc
+chrome/browser/enterprise/connectors/analysis/print_content_analysis_utils.cc

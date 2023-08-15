@@ -13,6 +13,8 @@ components/croma/croma_switches.h
 components/croma/BUILD.gn
 components/croma/croma_switches.cc
 components/croma/croma_switches.h
+chrome/browser/existing_switch_flag_choices.h
+chrome/browser/existing_switch_flag_entries.h
 chrome/common/referrer_sanitizer.cc
 chrome/common/referrer_sanitizer.h
 chrome/browser/bromite_flag_choices.h
@@ -21,3 +23,4 @@ chrome/browser/croma_flag_choices.h
 chrome/browser/croma_flag_entries.h
 chrome/browser/croma_platform_flag_choices.h
 chrome/browser/croma_platform_flag_entries.h
+chrome/browser/ui/webui/ungoogled_first_run.h
