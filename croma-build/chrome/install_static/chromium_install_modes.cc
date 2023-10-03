@@ -36,9 +36,12 @@ const InstallConstants kInstallModes[] = {
             L"",  // Empty app_guid since no integraion with Google Update.
         .base_app_name = L"Croma",      // A distinct base_app_name.
         .base_app_id = L"Croma",        // A distinct base_app_id.
-        .prog_id_prefix = L"CromaHTML",  // ProgID prefix.
-        .prog_id_description =
+        .browser_prog_id_prefix = L"CromaHTML",  // ProgID prefix.
+        .browser_prog_id_description =
             L"Croma HTML Document",  // ProgID description.
+        .pdf_prog_id_prefix = L"CromaPDF",  // PDF ProgID prefix.
+        .pdf_prog_id_description =
+            L"Croma PDF Document",  // PDF ProgID description.
         .active_setup_guid =
             L"{7D2B3E1D-D096-4594-9D8F-A6667F12E0AC}",  // Active Setup GUID.
         .legacy_command_execute_clsid =
@@ -80,5 +83,4 @@ const InstallConstants kInstallModes[] = {
 static_assert(_countof(kInstallModes) == NUM_INSTALL_MODES,
               "Imbalance between kInstallModes and InstallConstantIndex");
               
-
 }  // namespace install_static

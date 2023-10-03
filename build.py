@@ -164,6 +164,8 @@ def _run_build_process_timeout(*args, timeout):
         proc.stdin.close()
         try:
             proc.wait(timeout)
+            if proc.returncode != 0:
+                raise RuntimeError('Build failed!')
         except subprocess.TimeoutExpired:
             print('Sending keyboard interrupt')
             for _ in range(3):
